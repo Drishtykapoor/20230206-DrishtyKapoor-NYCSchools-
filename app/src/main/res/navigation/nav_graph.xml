@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.jpmc.a20230130drishtykapoornycschools.view.HomeFragment">
+        <action
+            android:id="@+id/detailAction"
+            app:destination="@id/SchoolDetailFragment">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/SchoolDetailFragment"
+        android:name="com.jpmc.a20230130drishtykapoornycschools.view.SchoolDetailFragment">
+        <argument
+            android:name="schoolData"
+            app:argType="com.jpmc.a20230130drishtykapoornycschools.repository.School" />
+    </fragment>
+
+</navigation>
