@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "school_table")
-data class SchoolTable(
+data class SchoolRow(
     val academicopportunities1: String,
     val academicopportunities2: String,
     val academicopportunities3: String,

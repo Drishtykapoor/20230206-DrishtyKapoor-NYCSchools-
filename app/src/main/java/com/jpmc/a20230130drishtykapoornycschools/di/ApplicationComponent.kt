@@ -12,6 +12,7 @@ import dagger.android.AndroidInjector
 @Component(
     modules = [
         ActivityModule::class,
+        DatabaseModule::class,
         AndroidInjectionModule::class,
     ]
 )

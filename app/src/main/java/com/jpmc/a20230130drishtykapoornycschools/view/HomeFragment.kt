@@ -2,6 +2,7 @@ package com.jpmc.a20230130drishtykapoornycschools.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,7 +76,7 @@ class HomeFragment : DaggerFragment(), HomeFragmentViewInterface,
     }
 
     override fun setError(data: String) {
-        TODO("Not yet implemented")
+        Log.d("nycschool", data)
     }
 
     override fun setData(data: List<School>) {
