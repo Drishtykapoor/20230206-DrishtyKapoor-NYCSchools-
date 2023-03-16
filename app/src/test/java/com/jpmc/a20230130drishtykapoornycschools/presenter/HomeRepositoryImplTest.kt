@@ -1,12 +1,15 @@
 package com.jpmc.a20230130drishtykapoornycschools.presenter
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.jpmc.a20230130drishtykapoornycschools.repository.HomeRepository
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import com.jpmc.a20230130drishtykapoornycschools.database.HomeDao
+import com.jpmc.a20230130drishtykapoornycschools.database.NycSchoolDatabase
 import com.jpmc.a20230130drishtykapoornycschools.repository.HomeRepositoryImpl
 import com.jpmc.a20230130drishtykapoornycschools.repository.NycSchoolDataApi
 import com.jpmc.a20230130drishtykapoornycschools.repository.School
-import com.jpmc.a20230130drishtykapoornycschools.view.HomeFragmentViewInterface
+import io.reactivex.Observer
 import io.reactivex.Single
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
@@ -29,28 +32,40 @@ class HomeRepositoryImplTest {
         @JvmField
         val schedulers = RxImmediateSchedulerRule()
     }
-    @Mock
-    lateinit var homePresenter: HomePresenter
 
     @Mock
     lateinit var nycSchoolDataApi: NycSchoolDataApi
 
+    @Mock
+    lateinit var database: NycSchoolDatabase
+
+    @Mock
+    lateinit var homeDao: HomeDao
+
+    var schoolData = MutableLiveData<List<School>>()
+    var errorData = MutableLiveData<String>()
+
     private lateinit var underTest: HomeRepositoryImpl
 
-    private val response = listOf(School(school_name = "some-name"))
+    private val expectedResponse = listOf(School(school_name = "some-name"))
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+        Mockito.`when`(database.homeDao()).thenReturn(homeDao)
         Mockito.`when`(nycSchoolDataApi.getData())
-            .thenReturn(Single.just(response))
-        underTest = HomeRepositoryImpl(nycSchoolDataApi)
+            .thenReturn(Single.just(expectedResponse))
+        underTest = HomeRepositoryImpl(nycSchoolDataApi,database)
     }
 
     @Test
     fun whenGetDataThenCallViewWithData() {
-        underTest.getData(homePresenter)
-        Mockito.verify(homePresenter).setData(response)
+        var actualResponse : List<School>? = null
+        val observer : (List<School>) -> Unit = { actualResponse = it }
+        schoolData.observeForever(observer)
+        underTest.getData(schoolData, errorData)
+        assertEquals(expectedResponse, actualResponse)
+        schoolData.removeObserver(observer)
     }
 
 }

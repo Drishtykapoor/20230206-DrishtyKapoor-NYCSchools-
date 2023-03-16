@@ -1,20 +1,24 @@
 package com.jpmc.a20230130drishtykapoornycschools.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.jpmc.a20230130drishtykapoornycschools.database.NycSchoolDatabase
 import com.jpmc.a20230130drishtykapoornycschools.database.SchoolRow
-import com.jpmc.a20230130drishtykapoornycschools.presenter.HomePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class HomeRepositoryImpl @Inject constructor(
     private val nycSchoolDataApi: NycSchoolDataApi,
-    private val nycSchoolDatabase: NycSchoolDatabase
+    private val nycSchoolDatabase: NycSchoolDatabase,
 ) : HomeRepository {
 
     private val disposable = CompositeDisposable()
-    override fun getData(homePresenter: HomePresenter) {
+    override fun getData(schoolListLiveData: MutableLiveData<List<School>>,
+                         errorLiveData: MutableLiveData<String>
+    ) {
         disposable.add(
             nycSchoolDataApi.getData()
                 .doOnSuccess {
@@ -25,9 +29,30 @@ class HomeRepositoryImpl @Inject constructor(
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(homePresenter::setData, homePresenter::handleError)
+                .subscribe({ schoolListLiveData.value = it }, { errorLiveData.value = it.message })
         )
     }
+
+
+//    fun updateDatabase(data: List<School>) {
+//        nycSchoolDatabase.homeDao().purseTable()
+//        data.forEach { t ->
+//            nycSchoolDatabase.homeDao().insert(t.toSchoolRow())
+//        }
+//    }
+
+//    override fun getData(homePresenter: HomePresenter) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val response = nycSchoolDataApi.getSchoolData()
+//            response.body()?.let {
+//                updateDatabase(it)
+//                withContext(Dispatchers.Main) {
+//                    homePresenter.setData(it)
+//                }
+//            }
+//        }
+//
+//    }
 
 
     override fun dispose() {

@@ -12,6 +12,7 @@ import com.jpmc.a20230130drishtykapoornycschools.presenter.SortOrder
 import com.jpmc.a20230130drishtykapoornycschools.repository.School
 import com.jpmc.a20230130drishtykapoornycschools.view.HomeFragmentDirections
 import javax.inject.Inject
+import kotlin.random.Random
 
 class SchoolListAdapter @Inject constructor(val navController: NavController) :
     RecyclerView.Adapter<SchoolListAdapter.ViewHolder>() {
@@ -19,7 +20,8 @@ class SchoolListAdapter @Inject constructor(val navController: NavController) :
     private val myData = mutableListOf<School>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.school_item, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.school_item_type1, parent, false)
         return ViewHolder(view)
     }
 
@@ -29,6 +31,10 @@ class SchoolListAdapter @Inject constructor(val navController: NavController) :
 
     override fun getItemCount(): Int {
         return myData.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return myData[position].type
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -57,6 +63,7 @@ class SchoolListAdapter @Inject constructor(val navController: NavController) :
         notifyDataSetChanged()
     }
 
+    // TODO Preserve the data when fragment is resumed and also preserve the sort order
     fun sort(sortOrder: SortOrder) {
         when (sortOrder) {
             SortOrder.Ascending -> myData.sortBy { it.school_name }

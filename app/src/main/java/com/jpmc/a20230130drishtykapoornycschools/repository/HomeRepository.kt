@@ -1,8 +1,8 @@
 package com.jpmc.a20230130drishtykapoornycschools.repository
 
-import com.jpmc.a20230130drishtykapoornycschools.presenter.HomePresenter
+import androidx.lifecycle.MutableLiveData
 
 interface HomeRepository {
-    fun getData(homePresenter: HomePresenter)
+    fun getData(liveData: MutableLiveData<List<School>>, errorLiveData: MutableLiveData<String>)
     fun dispose()
 }

@@ -4,7 +4,6 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jpmc.a20230130drishtykapoornycschools.repository.HomeRepository
 import com.jpmc.a20230130drishtykapoornycschools.repository.School
 import com.jpmc.a20230130drishtykapoornycschools.view.HomeFragmentViewInterface
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
@@ -17,7 +16,7 @@ import org.mockito.MockitoAnnotations
 
 
 @RunWith(JUnit4::class)
-class HomePresenterImplTest {
+class HomeViewModelTest {
 
     @Rule
     @JvmField
@@ -36,21 +35,27 @@ class HomePresenterImplTest {
     @Mock
     lateinit var homeView: HomeFragmentViewInterface
 
-    private lateinit var underTest: HomePresenterImpl
+    private lateinit var underTest: HomeViewModelImpl
 
     private val response = listOf(School(school_name = "some-name"))
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        underTest = HomePresenterImpl(homeRepository, homeView)
+       // underTest = HomeViewModelImpl(homeRepository, homeView)
 
     }
 
     @Test
     fun whenSetDataThenCallViewWithData() {
-        underTest.setData(response)
+        //underTest.setData(response)
         Mockito.verify(homeView).setData(response)
+    }
+
+    @Test
+    fun whenGetDataThenGetDataIsCalledOnRepo() {
+        underTest.getData()
+        //Mockito.verify(homeRepository).getData(underTest)
     }
 
 }

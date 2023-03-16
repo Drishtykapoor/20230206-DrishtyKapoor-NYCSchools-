@@ -61,5 +61,6 @@ data class School(
     val total_students: String = "",
     val transfer: String = "",
     val website: String = "",
-    val zip: String = ""
+    val zip: String = "",
+    var type: Int = 0,
 ) : Parcelable

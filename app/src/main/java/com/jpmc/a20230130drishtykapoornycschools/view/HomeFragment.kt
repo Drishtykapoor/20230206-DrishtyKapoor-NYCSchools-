@@ -10,7 +10,7 @@ import com.jpmc.a20230130drishtykapoornycschools.R
 import com.jpmc.a20230130drishtykapoornycschools.adapter.SchoolListAdapter
 import com.jpmc.a20230130drishtykapoornycschools.adapter.VerticalMarginDecorator
 import com.jpmc.a20230130drishtykapoornycschools.databinding.HomeFragmentBinding
-import com.jpmc.a20230130drishtykapoornycschools.presenter.HomePresenter
+import com.jpmc.a20230130drishtykapoornycschools.presenter.HomeViewModelImpl
 import com.jpmc.a20230130drishtykapoornycschools.presenter.SortOrder
 import com.jpmc.a20230130drishtykapoornycschools.repository.School
 import dagger.android.support.DaggerFragment
@@ -23,7 +23,7 @@ class HomeFragment : DaggerFragment(), HomeFragmentViewInterface,
     private lateinit var binding: HomeFragmentBinding
 
     @Inject
-    lateinit var presenter: HomePresenter
+    lateinit var viewModel: HomeViewModelImpl
 
     @Inject
     lateinit var adapter: SchoolListAdapter
@@ -48,7 +48,9 @@ class HomeFragment : DaggerFragment(), HomeFragmentViewInterface,
 
     override fun onResume() {
         super.onResume()
-        presenter.getData()
+        viewModel.schoolList.observe(this) { adapter.setData(it) }
+        viewModel.errorData.observe(this) { setError(it) }
+        viewModel.getData()
     }
 
     private fun showPopup(v: View) {
