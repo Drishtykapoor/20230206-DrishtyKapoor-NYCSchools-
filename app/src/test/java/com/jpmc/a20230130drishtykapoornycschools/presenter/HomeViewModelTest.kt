@@ -32,9 +32,6 @@ class HomeViewModelTest {
     @Mock
     lateinit var homeRepository: HomeRepository
 
-    @Mock
-    lateinit var homeView: HomeFragmentViewInterface
-
     private lateinit var underTest: HomeViewModelImpl
 
     private val response = listOf(School(school_name = "some-name"))
@@ -42,20 +39,14 @@ class HomeViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-       // underTest = HomeViewModelImpl(homeRepository, homeView)
+        underTest = HomeViewModelImpl(homeRepository)
 
-    }
-
-    @Test
-    fun whenSetDataThenCallViewWithData() {
-        //underTest.setData(response)
-        Mockito.verify(homeView).setData(response)
     }
 
     @Test
     fun whenGetDataThenGetDataIsCalledOnRepo() {
         underTest.getData()
-        //Mockito.verify(homeRepository).getData(underTest)
+        Mockito.verify(homeRepository).getData(underTest.schoolList, underTest.errorData)
     }
 
 }
